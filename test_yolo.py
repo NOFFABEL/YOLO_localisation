@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import argparse
-from yolo import YOLO, detect_video
+from yolo import YOLO
 from PIL import Image
 
 
