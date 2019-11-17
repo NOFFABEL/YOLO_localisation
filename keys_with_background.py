@@ -251,7 +251,7 @@ if __name__ == '__main__':
     PATH_KEYS = FLAGS.keys
     PATH_BACKGROUND = FLAGS.background
     PATH_OUTPUT = FLAGS.output
-    os.mkdir(PATH_OUTPUT)
+    os.makedirs(PATH_OUTPUT, exist_ok = True)
 	
 
     # Load paths to key
@@ -290,7 +290,6 @@ if __name__ == '__main__':
         final = addkey_to_background(b, k, x, y, blurr)
 
         # Save image
-
         output_path = os.path.join(PATH_OUTPUT,
                                    'gen_{:04d}.jpg'.format(num_images))
         img = image.array_to_img(final)
