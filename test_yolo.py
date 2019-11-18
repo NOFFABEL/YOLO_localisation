@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import sys
 import argparse
-from yolo import YOLO
+from yolo import YOLO, detect_video
 from PIL import Image
 
 
@@ -60,6 +60,6 @@ if __name__ == '__main__':
             print ('Must specify at least image_input_path.  See usage with --help.')
     elif FLAGS.video:
         if 'input' in FLAGS:
-            YOLO.detect_video(YOLO(**vars(FLAGS)), FLAGS.input, FLAGS.output)
+            detect_video(YOLO(**vars(FLAGS)), FLAGS.input, FLAGS.output)
         else:
             print ('Must specify at least video_input_path.  See usage with --help.')
