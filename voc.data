@@ -1,0 +1,6 @@
+classes= 21
+train  = VOCannotations.csv
+valid  = VOCannotations.csv
+names = /model_data/voc_classes.txt
+backup = backup
+
