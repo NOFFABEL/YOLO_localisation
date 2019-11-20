@@ -217,5 +217,4 @@ class YOLO(object):
                 break
         out.release()
         vid.release()
-        self.close_session()
 

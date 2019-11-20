@@ -3,8 +3,8 @@
 import sys
 import os
 import argparse
-from yolo import YOLO
 from PIL import Image
+from yolo import YOLO
 
 
 def detect_img(yolo, image_path, output_path=''):
@@ -19,6 +19,7 @@ def detect_img(yolo, image_path, output_path=''):
 def process_video(yolo, input, output=''):
     if(os.path.exists(input)):
         yolo.detect_video(input, output)
+        yolo.close_session()
 
 FLAGS = None
 
