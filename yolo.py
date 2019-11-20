@@ -4,6 +4,7 @@ Class definition of YOLO_v3 style detection model on image and video
 """
 
 import colorsys
+from os import getcwd
 import os
 from timeit import default_timer as timer
 import cv2
@@ -182,15 +183,14 @@ class YOLO(object):
     def detect_video(self, video_path, output_path=""):
         vid = cv2.VideoCapture(video_path)
         if not vid.isOpened():
-            raise IOError("Couldn't open webcam or video")
+            raise IOError("Couldn't open video {}".format(video_path))
         video_FourCC    = int(vid.get(cv2.CAP_PROP_FOURCC))
         video_fps       = vid.get(cv2.CAP_PROP_FPS)
         video_size      = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                             int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
-        isOutput = True if output_path != "" else False
-        if isOutput:
-            #print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
-            out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
+        output_path = os.path.join(getcwd(), 'out', 'video', "key_0.mp4") if output_path == "" else output_path
+        #print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
+        out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
         accum_time = 0
         curr_fps = 0
         fps = "FPS: ??"
@@ -209,12 +209,13 @@ class YOLO(object):
                 accum_time = accum_time - 1
                 fps = "FPS: " + str(curr_fps)
                 curr_fps = 0
-            cv2.putText(result, text=fps, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(0, 0, 255), thickness=2)
-            cv2.namedWindow("result", cv2.WINDOW_NORMAL)
-            cv2.imshow("result", result)
-            if isOutput:
-                out.write(result)
+            cv2.putText(result, text=fps, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(0, 255, 0), thickness=1)
+            #cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+            #cv2.imshow("result", result)
+            out.write(result)
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
-            self.close_session()
+        out.release()
+        vid.release()
+        self.close_session()
 
