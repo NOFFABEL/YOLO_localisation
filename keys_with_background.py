@@ -110,7 +110,7 @@ def load_key(
     f_height = height / size
     f = max(f_width, f_height)
     key = cv2.resize(key, None, fx=1 / f, fy=1 / f,
-                     interpolation=cv2.INTER_AREA)
+                    interpolation=cv2.INTER_AREA)
     (height, width) = key.shape[:2]
 
     return key
@@ -200,7 +200,7 @@ def addkey_to_background(
     alpha_factor = 0.9 * key_alpha[:, :, np.newaxis].astype(np.float32) \
         / 255.0
     alpha_factor = np.concatenate((alpha_factor, alpha_factor,
-                                  alpha_factor), axis=2)
+                                alpha_factor), axis=2)
 
     # Compute the patch to apply to the image (mix of background and foreground)
 
@@ -217,7 +217,7 @@ def addkey_to_background(
 
     kernel_size = int(round(3 * blurr)) * 2 + 1
     blurred = cv2.GaussianBlur(background, (kernel_size, kernel_size),
-                               0)
+                            0)
     return blurred
 
 

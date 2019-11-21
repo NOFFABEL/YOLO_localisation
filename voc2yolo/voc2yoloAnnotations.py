@@ -17,8 +17,8 @@ def merge(txt1, txt2, txtOut):
     return txtOut
 
 def yoloCoordinate(size, box):
-    dw = 1. / size[0]
-    dh = 1. / size[1]
+    '''dw = 1. / size[0]
+    dh = 1. / size[1]'''
 
     # (xmin + xmax / 2)
     x = (box[0] + box[1]) // 2
