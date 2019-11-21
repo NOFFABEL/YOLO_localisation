@@ -10,6 +10,8 @@ wd = getcwd()
 def merge(txt1, txt2, txtOut):
     with open(txtOut, 'a') as output:
         for txt in (txt1, txt2):
+            if(not os.path.exists(txt)):
+                continue
             with open(txt) as f:
                 output.write(f.read())
     return txtOut
@@ -19,30 +21,33 @@ def yoloCoordinate(size, box):
     dh = 1. / size[1]
 
     # (xmin + xmax / 2)
-    x = (box[0] + box[1]) / 2.0
+    x = (box[0] + box[1]) // 2
     # (ymin + ymax / 2)
-    y = (box[2] + box[3]) / 2.0
+    y = (box[2] + box[3]) // 2
 
     # (xmax - xmin) = w
     w = box[1] - box[0]
     # (ymax - ymin) = h
     h = box[3] - box[2]
 
-    x = x * dw
+    '''x = x * dw
     w = w * dw
     y = y * dh
     h = h * dh
-    return (round(x,3), round(y,3), round(w,3), round(h,3))
+    return (round(x,3), round(y,3), round(w,3), round(h,3))'''
+    return (x, y, w, h)
 
 def convert_annotation(dir, image_id):
     xml_file_name = image_id + ".xml"
     image_name = image_id + ".jpg"
-    in_file = open(os.path.join(dir, xml_file_name))
+    in_file = open(os.path.join(dir, 'Annotations', xml_file_name))
 
     tree = ET.parse(in_file)
     root = tree.getroot()
-    size = root.find('size')
-    img_path = os.path.join(dir, image_name)
+    xml_size = root.find('size')
+    size = [int(xml_size.find("width").text), int(xml_size.find("height").text)]
+    #print(size)
+    img_path = os.path.join(dir, 'JPEGImages', image_name)
     line = img_path
     for obj in root.iter('object'):
         cls = obj.find('name').text
@@ -50,10 +55,10 @@ def convert_annotation(dir, image_id):
             continue
         cls_id = classes.index(cls)
         xmlbox = obj.find('bndbox')
-        b = (float(xmlbox.find('xmin').text), float(xmlbox.find('xmax').text), float(xmlbox.find('ymin').text),
-            float(xmlbox.find('ymax').text))
+        b = (int(xmlbox.find('xmin').text), int(xmlbox.find('xmax').text), int(xmlbox.find('ymin').text),
+            int(xmlbox.find('ymax').text))
         (x, y, w, h) = yoloCoordinate(size, b)
-        line += " {}, {}, {}, {}, {}".format(x, y, w, h, cls_id)
+        line += " {},{},{},{},{}".format(x, y, w, h, cls_id)
     line += "\n"
     return line
 

@@ -149,7 +149,7 @@ def load_background(
 
     background = cv2.resize(background, None, fx=1 / f, fy=1 / f,
                             interpolation=cv2.INTER_AREA)
-    (height, width) = background.shape[:2]
+    #(height, width) = background.shape[:2]
 
     # Then crop what is outside the requested size, with a random offset
 
