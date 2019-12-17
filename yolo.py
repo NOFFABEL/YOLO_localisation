@@ -190,7 +190,8 @@ class YOLO(object):
                             int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
         output_path = os.path.join(getcwd(), 'out', 'video', "key_0.mp4") if output_path == "" else output_path
         #print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
-        out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
+        #out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
+        out = imageio.get_writer(output_path, fps=25)
         accum_time = 0
         curr_fps = 0
         fps = "FPS: ??"
@@ -210,9 +211,11 @@ class YOLO(object):
                 fps = "FPS: " + str(curr_fps)
                 curr_fps = 0
             cv2.putText(result, text=fps, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(0, 255, 0), thickness=1)
+            #result.save(os.path.join(os.path.dirname(output_path), 'img'))
             #cv2.namedWindow("result", cv2.WINDOW_NORMAL)
             #cv2.imshow("result", result)
-            out.write(result)
+            #out.write(result)
+            out.append_data(imageio.imread(result))
             if cv2.waitKey(1) & 0xFF == ord('q'):
                 break
         out.release()
