@@ -1,5 +1,5 @@
 **umonshadow**|
-- |:-: |
+|:-: |
 | Fabrice NOLACK  |
 | Justine PLUM  |
 
@@ -12,4 +12,4 @@ The purpose of this is to locate a key on any image or picture.
 
 ## The result
 this is our result.
-![Localisation Result](out\img\key_5.jpg "Localisation Result")
+![Localisation Result](out/img/key_5.jpg "Localisation Result")
