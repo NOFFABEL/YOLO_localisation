@@ -19,6 +19,7 @@ from yolo3.model import yolo_eval, yolo_body, tiny_yolo_body
 from yolo3.utils import letterbox_image
 from keras.utils import multi_gpu_model
 import imageio
+import natsort as ns
 
 class YOLO(object):
 
@@ -190,35 +191,27 @@ class YOLO(object):
         video_size      = (int(vid.get(cv2.CAP_PROP_FRAME_WIDTH)),
                             int(vid.get(cv2.CAP_PROP_FRAME_HEIGHT)))
         output_path = os.path.join(getcwd(), 'out', 'video', "key_0.mp4") if output_path == "" else output_path
-        #print("!!! TYPE:", type(output_path), type(video_FourCC), type(video_fps), type(video_size))
-        #out = cv2.VideoWriter(output_path, video_FourCC, video_fps, video_size)
         out = imageio.get_writer(output_path, fps=25)
-        accum_time = 0
-        curr_fps = 0
-        fps = "FPS: ??"
+        out_vid_img = os.path.join(os.path.dirname(output_path), 'img')
+        if os.path.exists(out_vid_img):
+            shutil.rmtree(out_vid_img)
+        os.makedirs(out_vid_img, exist_ok=True)
         prev_time = timer()
+        i = 0
+        prefix = 'img_out_'
         while True:
-            return_value, frame = vid.read()
-            image = Image.fromarray(frame)
-            image = self.detect_image(image)
-            result = np.asarray(image)
-            curr_time = timer()
-            exec_time = curr_time - prev_time
-            prev_time = curr_time
-            accum_time = accum_time + exec_time
-            curr_fps = curr_fps + 1
-            if accum_time > 1:
-                accum_time = accum_time - 1
-                fps = "FPS: " + str(curr_fps)
-                curr_fps = 0
-            cv2.putText(result, text=fps, org=(3, 15), fontFace=cv2.FONT_HERSHEY_SIMPLEX, fontScale=0.50, color=(0, 255, 0), thickness=1)
-            #result.save(os.path.join(os.path.dirname(output_path), 'img'))
-            #cv2.namedWindow("result", cv2.WINDOW_NORMAL)
-            #cv2.imshow("result", result)
-            #out.write(result)
-            out.append_data(imageio.imread(result))
-            if cv2.waitKey(1) & 0xFF == ord('q'):
+            r, frame = vid.read()
+            if r:
+                image = Image.fromarray(frame)
+                image_name = prefix + str(i) + '.png'
+                image = self.detect_image(image)
+                img_path = os.path.join(out_vid_img, image_name)
+                #cv2.imwrite(img_path, frame)
+                image.save(img_path)
+                i = i + 1
+                if cv2.waitKey(1) & 0xFF == ord('q'):
+                    break
+            else:
                 break
-        out.release()
         vid.release()
 
